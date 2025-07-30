@@ -24,6 +24,15 @@ let products = [
     category: "smartphone", // aid olduğu kateqoriya
     description: "Apple şirkətinin yeni nəsil telefonu",
     stock: 30, // stokda qalan məhsul sayı
+    is_active: false, // məhsul satışda olub-olmamasını bildirir
+  },
+  {
+    id: 4,
+    name: "Samsung 25",
+    price: 2500,
+    category: "smartphone", // aid olduğu kateqoriya
+    description: "Samsung şirkətinin yeni nəsil telefonu",
+    stock: 5, // stokda qalan məhsul sayı
     is_active: true, // məhsul satışda olub-olmamasını bildirir
   },
 ];
@@ -71,9 +80,14 @@ function getId() {
 }
 
 function swithcer() {
-  const productSection = +prompt(
-    "What do you want to do: Add product - 1, Edit product - 2, Delete by id - 3, Show products - 4, Find product by id - 5,  - 6, Search by title - 7"
+  let productSection = prompt(
+    "What do you want to do: Add product - 1, Edit product - 2, Delete by id - 3, Show products - 4, Find product by id - 5, Search by name - 6, Sort by price - 7, Is Active - 8"
   );
+  if (!isNaN(productSection)) {
+    productSection = Number(productSection);
+  } else {
+    alert("You didn't enter number, try again!");
+  }
   switch (productSection) {
     case 1:
       addProduct(products);
@@ -91,10 +105,13 @@ function swithcer() {
       findById(products);
       break;
     case 6:
-      deleteById(books);
+      search(products);
       break;
     case 7:
-      sortBy(books);
+      sort(products);
+      break;
+    case 8:
+      isActive(products);
       break;
 
     default:
@@ -112,7 +129,7 @@ function addProduct(products) {
     category: getCategory(),
     description: getDesc(),
     stock: getStock(),
-    is_active: getStock() > 0 ? true : false,
+    is_active: true,
   };
 
   products = [...products, newProduct];
@@ -131,7 +148,7 @@ function editProduct(products) {
     product.category = getCategory();
     product.description = getDesc();
     product.stock = getStock();
-    product.is_active = getStock() > 0 ? true : false;
+    product.is_active = true;
   } else {
     alert(`There is no product by ${getId} id`);
   }
@@ -167,5 +184,45 @@ function findById(products) {
     console.log(`Product is active: ${product.is_active}`);
   } else {
     alert(`There is no product by ${id}`);
+  }
+}
+
+function search(products) {
+  const name = getName();
+  const product = products.filter((item) =>
+    item.name.toLowerCase().includes(name.toLowerCase())
+  );
+
+  if (product && product.length) {
+    product.forEach((item) => {
+      console.log(item);
+    });
+  } else {
+    alert(`There is no product by name ${name}`);
+  }
+}
+
+function sort(products) {
+  const type = prompt("Enter only asc or desc");
+  if (type == "asc") {
+    products.sort((a, b) => a.price - b.price);
+    console.log(products);
+  } else if (type == "desc") {
+    products.sort((a, b) => b.price - a.price);
+    console.log(products);
+  } else {
+    alert("You didn't enter asc or desc");
+  }
+}
+
+
+function isActive(products) {
+  const id = +getId();
+  const product = products.find((product) => product.id === id);
+  if (product) {
+    product.is_active = !product.is_active ;
+    console.log(`${product.name} ${product.is_active ? "does not" : ""} on sale `);
+  } else {
+    alert(`There is no product by id ${id}`);
   }
 }

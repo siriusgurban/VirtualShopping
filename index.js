@@ -331,6 +331,7 @@ function deleteFromBasket(basket) {
 }
 
 function showBasket(basket, products) {
+  //test
   let totalPrice = 0;
   basket.forEach((item) => {
     const product = products.find((prod) => prod.id === item.product_id);
